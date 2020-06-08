@@ -2,13 +2,10 @@ import React,{useState,useRef} from 'react';
 import {StyleSheet,View,Text} from "react-native";
 
 
-export default function HomeScreen ({navigation}) {
-  const start_scan = () =>{
-    navigation.navigate("Scan")
-  }
+export default function ScanScreen () {
 return (
   <View style={styles.container}>
-      <Text onPress={() =>start_scan()}>START SCAN</Text>
+      <Text>test scan screen</Text>
   </View>
 )
 }

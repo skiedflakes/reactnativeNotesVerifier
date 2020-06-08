@@ -1,21 +1,25 @@
 import React,{useState,useRef} from 'react';
-import {StyleSheet,View,Text} from "react-native";
+import {StyleSheet,View,Text, Button, Alert} from "react-native";
+import { TextInput } from 'react-native-gesture-handler';
 
 
-export default function LoginScreen () {
-
-
+export default function LoginScreen ({navigation}) {
+  const login  = () => {
+    navigation.navigate("Main");
+  }
 return (
   <View style={styles.container}>
-      <Text>test login</Text>
+    <View></View>
+     <TextInput> Username</TextInput>
+     <TextInput hin> Password</TextInput>
+     <Button onPress={() =>login()} title="Login" style={{flex:1}}></Button>
   </View>
 )
-
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 6,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#ffffff',
