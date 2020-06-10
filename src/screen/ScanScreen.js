@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Linking
+  Linking,Alert
 } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -15,14 +15,13 @@ import { RNCamera } from 'react-native-camera';
 
 export default function ScanScreen ({navigation}) {
   const onSuccess = e => {
-    Linking.openURL(e.data).catch(err =>
-      console.error('An error occured', err)
-    );
+    Alert.alert(e.data);
   };
+
     return (
       <QRCodeScanner
         onRead={onSuccess}
-        flashMode={RNCamera.Constants.FlashMode.torch}
+        flashMode={RNCamera.Constants.off}
         topContent={
           <Text style={styles.centerText}>
             Go to{' '}
