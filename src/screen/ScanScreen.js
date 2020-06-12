@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  Linking,Alert
+  Linking,Alert,View
 } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -19,12 +19,14 @@ export default function ScanScreen ({navigation}) {
   };
 
     return (
+      <View style={{flex:1}}>
+      <View style={{flex:3}}>
       <QRCodeScanner
         onRead={onSuccess}
         flashMode={RNCamera.Constants.off}
         topContent={
           <Text style={styles.centerText}>
-            Go to{' '}
+            Go to{''}
             <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
             your computer and scan the QR code.
           </Text>
@@ -35,6 +37,11 @@ export default function ScanScreen ({navigation}) {
           </TouchableOpacity>
         }
       />
+      </View>
+      <View style={{flex:3, backgroundColor:"white"}}>
+        <Text>result</Text>
+      </View>
+      </View>
     );
 }
 
@@ -42,7 +49,7 @@ const styles = StyleSheet.create({
   centerText: {
     flex: 1,
     fontSize: 18,
-    padding: 32,
+    padding: 32, 
     color: '#777'
   },
   textBold: {
