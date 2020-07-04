@@ -1,12 +1,45 @@
-import React,{useState,useRef} from 'react';
-import {StyleSheet,View,Text, Button, Alert} from "react-native";
+import React,{useState,useEffect,useRef} from 'react';
+import {StyleSheet,View, Button, Alert,ActivityIndicator,Image} from "react-native";
 import { TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import { useFocusEffect } from '@react-navigation/native';
 
 export default function LoginScreen ({navigation}) {
+  const [user, setUser] = useState('');
+  const [password, setPassword] = useState('');
+  var [Show_loading,setShow_loading] = useState(false); 
+  var [Show_view,setShow_view] = useState(false); 
+  // useEffect(() => {    
+  //   console.log("useeffect")
+  //   retrieveData();  
+  // });
+  useFocusEffect(
+    React.useCallback(() => {
+      setUser('');
+      setPassword('');
+      console.log("useeffect")
+      retrieveData();  
+      return () => retrieveData();
+    }, [Show_view,Show_loading])
+  );
 
-  const [user, setUser] = React.useState('');
-  const [password, setPassword] = React.useState('');
+    const retrieveData = async () => {
+      try {
+       const valueString = await AsyncStorage.getItem('user_details');
+       const value = JSON.parse(valueString);
+       if(value==null){
+        setShow_loading(false);
+        setShow_view(true);
+       }else{
+        setShow_loading(true);
+        setShow_view(false);
+        navigation.navigate("Home");
+       }
+      } 
+      catch (error) {
+       console.log(error);
+      }
+     };
 
   const setItemStorage = async (key,value) => {
     try {
@@ -26,7 +59,7 @@ export default function LoginScreen ({navigation}) {
       formData.append('username', user);
       formData.append('password', password);
 
-      fetch('http://192.168.1.175/NotesVerifier_2020/login.php', {
+      fetch(global.global_url+'login.php', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -41,13 +74,15 @@ export default function LoginScreen ({navigation}) {
 
           if(save_response_data.status == '1'){
             
-            setItemStorage('user_details',{'user_id':save_response_data.user_id,
+            setItemStorage('user_details',{'user_details':1,'user_id':save_response_data.user_id,
             'company_code': save_response_data.company_code,
             'company_id': save_response_data.company_id,
             'user_code': save_response_data.user_code,
-            'category_id': save_response_data.category_id})
+            'category_id': save_response_data.category_id,
+            'company_name': save_response_data.company_name,
+            'user_name': save_response_data.user_name})
 
-            navigation.navigate("Main");
+            navigation.navigate("Home");
 
           } else {
               Alert.alert('User not found');
@@ -61,21 +96,35 @@ export default function LoginScreen ({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={{width:'75%'}}>
+
+      <View style={{width:'75%',marginBottom:60}}>
+      <ActivityIndicator size="large" color="#0000ff" animating={Show_loading}/>
+      {Show_view && 
+      <View>
+        <Image
+        style={{alignContent:'center',alignSelf:'center',  aspectRatio:0.8, 
+        resizeMode: 'contain',}}
+        source={require('../assets/qr_logo_icon.jpg')}/>
         <TextInput 
+                autoCompleteType="username"
                 style={{margin:10,borderColor: 'gray',borderWidth: 0.5,borderRadius:10,paddingLeft:20}}
                 placeholder='Username'
                 onChangeText={text => setUser(text)}
                 underlineColorAndroid='#FFF'
+                value={user}
         />
         <TextInput 
+          secureTextEntry={true}
                 style={{margin:10,borderColor: 'gray',borderWidth: 0.5,borderRadius:10,paddingLeft:20}}
                 placeholder='Password'
                 onChangeText={text => setPassword(text)}
                 underlineColorAndroid='#FFF'
+                value={password}
         />
         <Button onPress={() =>login()} title="Login" style={{flex:1}}></Button>
-      </View>
+     </View>
+     }
+    </View>
     </View>
   )
 }
