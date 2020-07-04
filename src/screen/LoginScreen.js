@@ -9,15 +9,10 @@ export default function LoginScreen ({navigation}) {
   const [password, setPassword] = useState('');
   var [Show_loading,setShow_loading] = useState(false); 
   var [Show_view,setShow_view] = useState(false); 
-  // useEffect(() => {    
-  //   console.log("useeffect")
-  //   retrieveData();  
-  // });
   useFocusEffect(
     React.useCallback(() => {
       setUser('');
       setPassword('');
-      console.log("useeffect")
       retrieveData();  
       return () => retrieveData();
     }, [Show_view,Show_loading])
@@ -69,7 +64,7 @@ export default function LoginScreen ({navigation}) {
 
       }).then((response) => response.json())
         .then((responseJson) => {
-          console.log(responseJson);
+
           var save_response_data = responseJson.response_[0];
 
           if(save_response_data.status == '1'){

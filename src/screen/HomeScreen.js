@@ -2,7 +2,7 @@ import React,{useState,useRef} from 'react';
 import {StyleSheet,View,Text,Button,Image} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/FontAwesome';
+
 
 export default function HomeScreen ({navigation:{goBack},navigation}) {
   const[Company_name,setCompany_name] = useState('');
