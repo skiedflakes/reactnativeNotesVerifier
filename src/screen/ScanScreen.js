@@ -100,11 +100,10 @@ export default function ScanScreen ({navigation}) {
       />
       </View>
       <View style={{flex:3, backgroundColor:"white",padding:20}}>
-      <Button title="reactivate" onPress={()=>{}}></Button>
-      <Text>status: </Text>       
+      {/* <Button title="reactivate" onPress={()=>{}}></Button> */}
+      <Text>Doc. No. : {Doc_No}</Text>   
       <Text>Date: {Date}</Text>
       <Text>Check No.: {Check_num}</Text>
-      <Text>Doc. No. : {Doc_No}</Text>
       <Text>Amount :{Amount}</Text>
       </View> 
       </View>

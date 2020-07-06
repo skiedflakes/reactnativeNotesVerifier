@@ -38,12 +38,15 @@ export default function HomeScreen ({navigation:{goBack},navigation}) {
 
 return (
   <View style={styles.container}>
-    <View style={{flex:0.5,backgroundColor: '#3490DD',flexDirection:'row-reverse',}}>
-    <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}} onPress={() =>logout()}>Logout</Text>
+    <View style={{flex:0.5,backgroundColor: '#3490DD',flexDirection:'row',}}>
+      <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}}>{User_name}</Text>
+      <View style={{flex:5.5,flexDirection:'row-reverse',}}>
+      <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}} onPress={() =>logout()}>Logout</Text>
+      </View>
     </View>
     <View style={{flex:4,alignItems: 'center',alignContent:'center',justifyContent:'center',backgroundColor:'#14B6D6'}}>
-    <Text>{User_name}</Text>
-    <Text>{Company_name}</Text>
+
+    <Text style={{color:'#ffff',padding:10, fontSize:18,}}>{Company_name}</Text>
     <Image
         style={styles.image}
         source={require('../assets/qr_codes.png')}/>
