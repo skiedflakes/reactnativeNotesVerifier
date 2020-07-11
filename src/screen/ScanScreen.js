@@ -8,7 +8,7 @@ import {
   Text,
   Button,
   TouchableOpacity,
-  Linking,Alert,View
+  Linking,Alert,View,Modal,TouchableHighlight
 } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -20,10 +20,12 @@ export default function ScanScreen ({navigation}) {
   const [Date, setDate] = useState("");
   const [Check_num, setCheck_num] = useState("");
   const [Doc_No, setDoc_No] = useState("");
-
+  const [Status, setStatus] = useState("");
+  const [NetworkStatus, setNetworkStatus] = useState("");
+  //views
+  const [ShowView,setShowView] =useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const onSuccess = e => {
-    Alert.alert(e.data);
-
     check_qr_code_to_db(e.data);
   };
   
@@ -46,18 +48,22 @@ export default function ScanScreen ({navigation}) {
           });
         });
     });
+    setShowView(false)
       return () => {
       };
     }, [])
   );
 
+  const  scanner_reactivate  = () => {Scanner_id.reactivate();}
+
   const check_qr_code_to_db  = (qr_code) => {
+    setShowView(false);
     const formData = new FormData();
     formData.append('company_code', company_code);
     formData.append('company_id',company_id);
     formData.append('qr_code',qr_code);
 
-      fetch(glboal.global_url+'check_qr_to_db2.php', {
+      fetch(global.global_url+'check_qr_to_db2.php', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -66,30 +72,44 @@ export default function ScanScreen ({navigation}) {
         body: formData
       }).then((response) => response.json())
         .then((responseJson) => {
-          Scanner_id.reactivate();
+         
+
+         
           var response_data = responseJson.response_[0];
-          setAmount(response_data.amount);
-          setDate(response_data.check_date);
-          setDoc_No(response_data.doc_number);
-          setCheck_num(response_data.check_num);
+          set_modal_visibile_with_status(1);
+          if(response_data.status>0){
+            setShowView(true); //show view
+            setAmount(response_data.amount);
+            setDate(response_data.check_date);
+            setDoc_No(response_data.doc_number);
+            setCheck_num(response_data.check_num);
+            setStatus(response_data.status);
+          }else{
+            setShowView(false); //show view
+            setStatus(response_data.status);
+          }
+
+      
         }).catch((error) => {
           console.error(error);
+          set_modal_visibile_with_status(0);
         });
     }
 
+    const set_modal_visibile_with_status = (network_status) => {
+      setNetworkStatus(network_status);
+      setModalVisible(true);
+    }
+
     return (
-      <View style={{flex:1}}>
+
+    <View style={styles.main}>
+     <Success_modal visbiility={modalVisible} const_state={setModalVisible} status={Status} network_status ={NetworkStatus}  scanner={scanner_reactivate}/>
+      <View style={{flex:1,}}>
       <View style={{flex:3}}>
       <QRCodeScanner
         onRead={onSuccess}
         flashMode={RNCamera.Constants.off}
-        topContent={
-          <Text style={styles.centerText}>
-            Go to{''}
-            <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on
-            your computer and scan the QR code.
-          </Text>
-        } 
         ref={(node) => {setScanner_id(node)}}
         bottomContent={
 
@@ -100,17 +120,69 @@ export default function ScanScreen ({navigation}) {
       />
       </View>
       <View style={{flex:3, backgroundColor:"white",padding:20}}>
-      {/* <Button title="reactivate" onPress={()=>{}}></Button> */}
-      <Text>Doc. No. : {Doc_No}</Text>   
+      {/* <Button title="test scan" onPress={()=>{check_qr_code_to_db('RFR-124-06152016051')}}></Button>
+      <Button title="test modal" onPress={()=>{setModalVisible(true)}}></Button> */}
+      {ShowView &&
+      <View>
+      <Text>{Doc_No}</Text>   
       <Text>Date: {Date}</Text>
       <Text>Check No.: {Check_num}</Text>
       <Text>Amount :{Amount}</Text>
+      </View>
+      }
       </View> 
+      </View>
       </View>
     );
 }
 
+function Success_modal({visbiility,const_state,status,scanner,network_status}) {
+  return( 
+   <Modal
+    animationType="fade"
+    transparent={true}
+    visible={visbiility}
+    >
+      <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+      <View style={{flexDirection:"column-reverse",height: 150,width:250}}>
+      <View style={{flexDirection:"row"}}>
+ 
+      <View style={{flex:1,flexDirection:"column"}}>
+      <Text style={styles.textBold}>{network_status}</Text>
+      <Text style={styles.textBold}>{status}</Text>
+
+      {network_status>0?status>0?
+      <Text>Scan Success</Text>
+      :<Text>QR not found</Text>
+      :<Text>error network connection</Text>}
+
+      <TouchableHighlight
+          style={{...styles.openButton, backgroundColor: "#787878",marginTop:10}}
+          onPress={() => {
+            const_state(!visbiility);
+            scanner();
+          }}>   
+      <Text style={styles.textStyle}>OK</Text>
+      </TouchableHighlight>
+      </View>
+      </View>
+      </View>
+      </View>
+      </View>
+    </Modal>
+  )}
+
 const styles = StyleSheet.create({
+  main:{
+    alignItems:"center",
+    alignContent:"center",
+    alignSelf:"center",
+    flex:6,
+    backgroundColor: '#ffff',
+    alignContent:"center",
+    flexDirection:'column'
+},
   centerText: {
     flex: 1,
     fontSize: 18,
@@ -127,5 +199,56 @@ const styles = StyleSheet.create({
   },
   buttonTouchable: {
     padding: 16
-  }
+  },modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  modal_centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  }, 
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2
+  },  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
 });

@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 import AsyncStorage from '@react-native-community/async-storage';
 function App() {
     useEffect(() => {
-      global.global_url = 'http://192.168.1.160/NotesVerifier_2020/';
+      global.global_url = 'http://192.168.2.114/NotesVerifier_2020/';
     });
     return (
       <NavigationContainer>
