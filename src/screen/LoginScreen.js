@@ -3,7 +3,7 @@ import {StyleSheet,View, Button, Alert,ActivityIndicator,Image} from "react-nati
 import { TextInput } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-
+import AntDesign from 'react-native-vector-icons/AntDesign';
 export default function LoginScreen ({navigation}) {
   const [user, setUser] = useState('');
   const [password, setPassword] = useState('');
@@ -91,7 +91,8 @@ export default function LoginScreen ({navigation}) {
 
   return (
     <View style={styles.container}>
-
+   <AntDesign name="stepbackward" size={25} color={"#ffff"} style={{marginLeft:10}}/>
+      
       <View style={{width:'75%',marginBottom:60}}>
       <ActivityIndicator size="large" color="#0000ff" animating={Show_loading}/>
       {Show_view && 

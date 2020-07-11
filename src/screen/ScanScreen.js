@@ -13,6 +13,7 @@ import {
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import { RNCamera } from 'react-native-camera';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export default function ScanScreen ({navigation}) {
   const  [Scanner_id, setScanner_id] = useState("");
@@ -120,8 +121,8 @@ export default function ScanScreen ({navigation}) {
       />
       </View>
       <View style={{flex:3, backgroundColor:"white",padding:20}}>
-      {/* <Button title="test scan" onPress={()=>{check_qr_code_to_db('RFR-124-06152016051')}}></Button>
-      <Button title="test modal" onPress={()=>{setModalVisible(true)}}></Button> */}
+      {/* <Button title="test scan" onPress={()=>{check_qr_code_to_db('RFR-124-06152016051')}}></Button> */}
+      <Button title="test modal" onPress={()=>{setModalVisible(true)}}></Button>
       {ShowView &&
       <View>
       <Text>{Doc_No}</Text>   
@@ -145,7 +146,7 @@ function Success_modal({visbiility,const_state,status,scanner,network_status}) {
     >
       <View style={styles.centeredView}>
           <View style={styles.modalView}>
-      <View style={{flexDirection:"column-reverse",height: 150,width:250}}>
+      <View style={{flexDirection:"column-reverse",height: 100,width:250}}>
       <View style={{flexDirection:"row"}}>
  
       <View style={{flex:1,flexDirection:"column"}}>
@@ -153,9 +154,9 @@ function Success_modal({visbiility,const_state,status,scanner,network_status}) {
       <Text style={styles.textBold}>{status}</Text>
 
       {network_status>0?status>0?
-      <Text>Scan Success</Text>
-      :<Text>QR not found</Text>
-      :<Text>error network connection</Text>}
+      <Text style={styles.status_text}><AntDesign name="checkcircleo" color={'#1FC80A'} size={20}/> Scan Success</Text>
+      :<Text style={styles.status_text}><AntDesign name="exclamationcircle" size={20}/> QR not found</Text>
+      :<Text style={styles.status_text}><AntDesign name="exclamationcircle" size={20}/>  Error Network Connection</Text>}
 
       <TouchableHighlight
           style={{...styles.openButton, backgroundColor: "#787878",marginTop:10}}
@@ -251,4 +252,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 22
   },
+  status_text:{
+    justifyContent:"center",
+    fontSize:15,
+    padding:10,
+    // backgroundColor:"#FF5733",
+    alignContent:"center",
+    alignSelf:"center",
+  }
 });

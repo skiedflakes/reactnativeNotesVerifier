@@ -2,7 +2,8 @@ import React,{useState,useRef} from 'react';
 import {StyleSheet,View,Text,Button,Image} from "react-native";
 import AsyncStorage from '@react-native-community/async-storage';
 import { useFocusEffect } from '@react-navigation/native';
-
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 export default function HomeScreen ({navigation:{goBack},navigation}) {
   const[Company_name,setCompany_name] = useState('');
@@ -39,9 +40,11 @@ export default function HomeScreen ({navigation:{goBack},navigation}) {
 return (
   <View style={styles.container}>
     <View style={{flex:0.5,backgroundColor: '#3490DD',flexDirection:'row',}}>
-      <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}}>{User_name}</Text>
+    <FontAwesome name="user-circle" size={25} color={"#ffff"} style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}}/>
+      <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff'}}>{User_name}</Text>
       <View style={{flex:5.5,flexDirection:'row-reverse',}}>
-      <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}} onPress={() =>logout()}>Logout</Text>
+      <MaterialCommunityIcons onPress={() =>logout()} name="logout" size={25} color={"#ffff"} style={{alignContent:'center',alignSelf:'center', color:'#ffff',padding:10}}/>
+      <Text style={{alignContent:'center',alignSelf:'center', color:'#ffff'}} onPress={() =>logout()}>Logout</Text>
       </View>
     </View>
     <View style={{flex:4,alignItems: 'center',alignContent:'center',justifyContent:'center',backgroundColor:'#14B6D6'}}>
