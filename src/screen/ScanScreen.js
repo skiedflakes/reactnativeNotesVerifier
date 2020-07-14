@@ -121,8 +121,7 @@ export default function ScanScreen ({navigation}) {
       />
       </View>
       <View style={{flex:3, backgroundColor:"white",padding:20}}>
-      {/* <Button title="test scan" onPress={()=>{check_qr_code_to_db('RFR-124-06152016051')}}></Button> */}
-      <Button title="test modal" onPress={()=>{setModalVisible(true)}}></Button>
+
       {ShowView &&
       <View>
       <Text>{Doc_No}</Text>   
