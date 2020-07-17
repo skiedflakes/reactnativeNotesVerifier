@@ -60,9 +60,9 @@ export default function ScanScreen ({navigation}) {
   const check_qr_code_to_db  = (qr_code) => {
     setShowView(false);
     const formData = new FormData();
-    formData.append('company_code', company_code);
-    formData.append('company_id',company_id);
-    formData.append('qr_code',qr_code);
+    formData.append('company_code', '12020');
+    formData.append('company_id','1');
+    formData.append('qr_code','RFR-251-071620152223');
 
       fetch(global.global_url+'check_qr_to_db2.php', {
         method: 'POST',
@@ -73,9 +73,6 @@ export default function ScanScreen ({navigation}) {
         body: formData
       }).then((response) => response.json())
         .then((responseJson) => {
-         
-
-         
           var response_data = responseJson.response_[0];
           set_modal_visibile_with_status(1);
           if(response_data.status>0){
@@ -121,7 +118,7 @@ export default function ScanScreen ({navigation}) {
       />
       </View>
       <View style={{flex:3, backgroundColor:"white",padding:20}}>
-
+      {/* <Button title="test"  onPress={() =>check_qr_code_to_db()}></Button> */}
       {ShowView &&
       <View>
       <Text>{Doc_No}</Text>   
@@ -149,14 +146,11 @@ function Success_modal({visbiility,const_state,status,scanner,network_status}) {
       <View style={{flexDirection:"row"}}>
  
       <View style={{flex:1,flexDirection:"column"}}>
-      <Text style={styles.textBold}>{network_status}</Text>
-      <Text style={styles.textBold}>{status}</Text>
-
+   
       {network_status>0?status>0?
-      <Text style={styles.status_text}><AntDesign name="checkcircleo" color={'#1FC80A'} size={20}/> Scan Success</Text>
+      <Text style={styles.status_text}><AntDesign name="checkcircleo" color={'#1FC80A'} size={20}/>  Success Document Verified!</Text>
       :<Text style={styles.status_text}><AntDesign name="exclamationcircle" size={20}/> QR not found</Text>
       :<Text style={styles.status_text}><AntDesign name="exclamationcircle" size={20}/>  Error Network Connection</Text>}
-
       <TouchableHighlight
           style={{...styles.openButton, backgroundColor: "#787878",marginTop:10}}
           onPress={() => {

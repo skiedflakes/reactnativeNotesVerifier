@@ -54,7 +54,7 @@ export default function LoginScreen ({navigation}) {
       formData.append('username', user);
       formData.append('password', password);
 
-      fetch(global.global_url+'login.php', {
+      fetch(global.global_url+'login_verifier.php', {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
@@ -68,7 +68,6 @@ export default function LoginScreen ({navigation}) {
           var save_response_data = responseJson.response_[0];
 
           if(save_response_data.status == '1'){
-            
             setItemStorage('user_details',{'user_details':1,'user_id':save_response_data.user_id,
             'company_code': save_response_data.company_code,
             'company_id': save_response_data.company_id,
@@ -76,19 +75,15 @@ export default function LoginScreen ({navigation}) {
             'category_id': save_response_data.category_id,
             'company_name': save_response_data.company_name,
             'user_name': save_response_data.user_name})
-
             navigation.navigate("Home");
-
           } else {
               Alert.alert('User not found');
           }
-
         }).catch((error) => {
           console.error(error);
         });
     }
   }
-
   return (
     <View style={styles.container}>
    <AntDesign name="stepbackward" size={25} color={"#ffff"} style={{marginLeft:10}}/>
