@@ -2,13 +2,14 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import React, { Component, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+
 import {
   AppRegistry,
   StyleSheet,
   Text,
   Button,
   TouchableOpacity,
-  Linking,Alert,View,Modal,TouchableHighlight
+  Linking,Alert,View,Modal,TouchableHighlight,ActivityIndicator
 } from 'react-native';
 
 import QRCodeScanner from 'react-native-qrcode-scanner';
@@ -25,6 +26,7 @@ export default function ScanScreen ({navigation}) {
   const [NetworkStatus, setNetworkStatus] = useState("");
   //views
   const [ShowView,setShowView] =useState(false);
+  const [ShowLoading,setShowLoading] =useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const onSuccess = e => {
     check_qr_code_to_db(e.data);
@@ -58,11 +60,12 @@ export default function ScanScreen ({navigation}) {
   const  scanner_reactivate  = () => {Scanner_id.reactivate();}
 
   const check_qr_code_to_db  = (qr_code) => {
+    setShowLoading(true);
     setShowView(false);
     const formData = new FormData();
-    formData.append('company_code', '12020');
-    formData.append('company_id','1');
-    formData.append('qr_code','RFR-251-071620152223');
+    formData.append('company_code', company_code);
+    formData.append('company_id',company_id);
+    formData.append('qr_code',qr_code);
 
       fetch(global.global_url+'check_qr_to_db2.php', {
         method: 'POST',
@@ -73,6 +76,7 @@ export default function ScanScreen ({navigation}) {
         body: formData
       }).then((response) => response.json())
         .then((responseJson) => {
+          setShowLoading(false);
           var response_data = responseJson.response_[0];
           set_modal_visibile_with_status(1);
           if(response_data.status>0){
@@ -83,12 +87,11 @@ export default function ScanScreen ({navigation}) {
             setCheck_num(response_data.check_num);
             setStatus(response_data.status);
           }else{
-            setShowView(false); //show view
+            setShowView(true); //show view
             setStatus(response_data.status);
           }
-
-      
         }).catch((error) => {
+          setShowLoading(false);
           console.error(error);
           set_modal_visibile_with_status(0);
         });
@@ -118,13 +121,13 @@ export default function ScanScreen ({navigation}) {
       />
       </View>
       <View style={{flex:3, backgroundColor:"white",padding:20}}>
-      {/* <Button title="test"  onPress={() =>check_qr_code_to_db()}></Button> */}
+      <ActivityIndicator size="large" color="#0000ff" animating={ShowLoading}/>
       {ShowView &&
       <View>
-      <Text>{Doc_No}</Text>   
+      <Text style={styles.textStyle_1}>{Doc_No}</Text>   
       <Text>Date: {Date}</Text>
-      <Text>Check No.: {Check_num}</Text>
-      <Text>Amount :{Amount}</Text>
+      <Text>Check # : {Check_num}</Text>
+      <Text>Total Amount :{Amount}</Text>
       </View>
       }
       </View> 
@@ -252,5 +255,8 @@ const styles = StyleSheet.create({
     // backgroundColor:"#FF5733",
     alignContent:"center",
     alignSelf:"center",
+  },
+  textStyle_1:{
+    fontSize:18,
   }
 });
